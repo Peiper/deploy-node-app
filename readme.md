@@ -6,7 +6,7 @@ npm install
 
 node app.js
 
-# Use forever for example if you want the app to running
+# Use 'forever' for example if you want the app to keep running
 
 npm install -g forever
 
