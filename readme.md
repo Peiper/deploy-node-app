@@ -1,10 +1,13 @@
-#Get dependencies
+# Get dependencies
+
 npm install
 
-#Run
+# Run
+
 node app.js
 
-#Use forever for example if you want the app to running
+# Use forever for example if you want the app to running
+
 npm install -g forever
 
 forever start app.js
