@@ -38,7 +38,7 @@ app.get('/site/build', function (req, res) {
       if (res.result != null) {
         let data = res.result;
         // build
-        exec('(cd peiper.se && yarn run build)', function (err, stdout, stderr) { execCallback(err, stdout, stderr, data) });
+        exec('(cd /home/pi/deploy-site/peiper.se && yarn run build)', function (err, stdout, stderr) { execCallback(err, stdout, stderr, data) });
         console.log('build done');
         //update db
         data.status = 'DONE';
