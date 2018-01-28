@@ -1,5 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var fetch = require('node-fetch');
+
 var app = express();
 var exec = require('child_process').execSync;
 
@@ -12,7 +14,7 @@ app.get('/', function (req, res) {
   res.end();
 });
 
-app.post('/build', function (req, res) {
+app.get('/site/build', function (req, res) {
 
   console.log('pulling code from GitHub...');
 
@@ -29,14 +31,25 @@ app.post('/build', function (req, res) {
   res.sendStatus(200);
   res.end();
 
-  console.log('running build');
-  // build
-  exec('(cd peiper.se && yarn run build)', execCallback);
-
-  console.log('build done');
+  console.log('creating build');
+  const url = 'http://localhost:5000/api/deploy/sitebuilds/';
+  PostData({}, url)
+    .then((res) => {
+      if (res.result != null) {
+        let data = res.result;
+        // build
+        exec('(cd peiper.se && yarn run build)', function (err, stdout, stderr) { execCallback(err, stdout, stderr, data) });
+        console.log('build done');
+        //update db
+        data.status = 'DONE';
+        PostData(data, url)
+          .then((res) => {
+          });
+      }
+    });;
 });
 
-app.get('/deploy-site', function (req, res) {
+app.get('/site/deploy', function (req, res) {
   console.log('copying dist to www');
   exec('sudo cp -r peiper.se/dist/. /www/peiper.se');
   console.log('deploy done');
@@ -45,7 +58,7 @@ app.get('/deploy-site', function (req, res) {
   res.end();
 });
 
-app.get('/deploy-api', function (req, res) {
+app.get('/api/deploy', function (req, res) {
 
   console.log('pulling code from GitHub...');
   // reset any changes that have been made locally
@@ -56,10 +69,10 @@ app.get('/deploy-api', function (req, res) {
 
   // now pull down the latest
   exec('sudo git -C /home/pi/peiper-api-publish pull -f', execCallback);
-  
+
   // make api executeable
   exec('sudo chmod 755 /home/pi/peiper-api-publish/api');
-  
+
   // restart service
   exec('sudo systemctl restart kestrel-api.service', execCallback);
 
@@ -73,7 +86,27 @@ app.listen(3000, function () {
   console.log('listening on port 3000')
 });
 
-function execCallback(err, stdout, stderr) {
-  if (stdout) console.log(stdout);
-  if (stderr) console.log(stderr);
+function execCallback(err, stdout, stderr, data) {
+  if (stdout) {
+    console.log(stdout);
+  }
+  if (stderr) {
+    if (data) {
+      data.status = 'FAILED';
+      PostData(data);
+    }
+    console.log(stderr);
+  }
+}
+
+function PostData(data, url) {
+  const myHeaders = {
+    'Accept': 'application/json, text/plain, */*',
+    'Content-Type': 'application/json'
+  };
+  const options = { method: 'POST', body: JSON.stringify(data), headers: myHeaders, credentials: 'same-origin' };
+  return fetch(url, options)
+    .then(function (res) {
+      return res.json();
+    });
 }
