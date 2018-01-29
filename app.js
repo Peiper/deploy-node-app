@@ -33,10 +33,11 @@ app.post('/site/build', function (req, res) {
 
   console.log('creating build');
   const url = 'http://localhost:5000/api/deploy/sitebuilds/';
-  PostData({}, url)
+  let data = {hash: req.body.head_commit.id, message: req.body.head_commit.message}
+  PostData(data, url)
     .then((res) => {
       if (res.result != null) {
-        let data = res.result;
+        data = res.result;
         // build
         exec('(cd /home/pi/deploy-site/peiper.se && yarn run build)', function (err, stdout, stderr) { execCallback(err, stdout, stderr, data) });
         console.log('build done');
