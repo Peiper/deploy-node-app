@@ -14,8 +14,8 @@ app.get('/', function (req, res) {
   res.end();
 });
 
-app.get('/site/build', function (req, res) {
-
+app.post('/site/build', function (req, res) {
+  
   console.log('pulling code from GitHub...');
 
   // reset any changes that have been made locally
