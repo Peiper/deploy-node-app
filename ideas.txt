@@ -1,0 +1,12 @@
+auto bygg 
+    *   (kolla om något redan bygger? queue? batch queue?)
+    *   spara bygget med nytt versionsnummer (hämta versionsnummer från ravendb), commit hash och meddelande 
+    *   hämta kod, 
+    *   bygg
+    *   kopiera från dist till ny versionskatalog
+    *   update with status done
+
+deploy 
+    *   spara release med nytt versionsnummer (hämta versionsnummer från ravendb)
+    *   kopiera från dist till ny versionskatalog
+    *   kopiera från versionenskatalogen till kör mappen
