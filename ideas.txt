@@ -10,3 +10,4 @@ deploy
     *   spara release med nytt versionsnummer (hämta versionsnummer från ravendb)
     *   kopiera från dist till ny versionskatalog
     *   kopiera från versionenskatalogen till kör mappen
+
