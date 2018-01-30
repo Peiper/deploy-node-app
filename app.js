@@ -14,8 +14,19 @@ app.get('/', function (req, res) {
   res.end();
 });
 
+app.get('/site/build/:hash', function (req,res){
+  console.log(req.params.hash);
+
+  res.sendStatus(200);
+  res.end();
+});
+
 app.post('/site/build', function (req, res) {
-  
+  if(req.body == undefined || req.body.head_commit == undefined){
+    res.sendStatus(400);
+    res.end();
+  }
+
   console.log('pulling code from GitHub...');
 
   // reset any changes that have been made locally
