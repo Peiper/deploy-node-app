@@ -48,7 +48,7 @@ module.exports = {
     },
     updateData: async function (id, status) {
         const session = store.openSession();
-        data = await session.load(data.id);
+        data = await session.load(id);
         data.status = status;
         data.updated = new Date();
 
