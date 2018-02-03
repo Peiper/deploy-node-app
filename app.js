@@ -21,7 +21,7 @@ app.post('/site/build', function (req, res) {
     res.end();
   }
 
-  pullFromGit('/home/pi/deploy-site/peiper.se');
+  pullFromGit('/home/pi/build/site/peiper.se');
   createSiteBuild(req.body.head_commit.id, req.body.head_commit.message);
 
   res.sendStatus(200);
@@ -30,11 +30,13 @@ app.post('/site/build', function (req, res) {
 
 async function createSiteBuild(hash, message) {
   console.log('creating build: ' + hash);
-  ravenHelper.createSiteBuild(hash, message)
+  let data = ravenHelper.createSiteBuild(hash, message)
   //Build
-  exec('(cd /home/pi/deploy-site/peiper.se && yarn run build)', function (err, stdout, stderr) { execCallback(err, stdout, stderr, data) });
+  exec('(cd /home/pi/build/site/peiper.se && yarn run build)', function (err, stdout, stderr) { execCallback(err, stdout, stderr, data) });
 
-  //TODO mkdir and copy dist
+  //copy files to build version folder
+  exec('(cd /home/pi/build/site/ && mkdir ' + data.version + ')', execCallback);
+  exec('cp /home/pi/build/site/peiper.se/. /home/pi/build/site/' + data.version);
 
   //Update build data
   await updateData(data.id, 'DONE');

@@ -22,6 +22,8 @@ module.exports = {
         data = await session.store(data, 'SiteBuilds/');
         await session.store(version);
         await session.saveChanges();
+
+        return data;
     },
     createApiBuild: async function (hash, message) {
         const session = store.openSession();
@@ -41,6 +43,8 @@ module.exports = {
         data = await session.store(data, 'ApiBuilds/');
         await session.store(version);
         await session.saveChanges();
+
+        return data;
     },
     updateData: async function (id, status) {
         const session = store.openSession();
