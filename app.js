@@ -21,18 +21,18 @@ app.post('/site/build', function (req, res) {
     res.end();
   }
 
-  pullFromGit('/home/pi/build/site/peiper.se');
-  createSiteBuild(req.body.head_commit.id, req.body.head_commit.message);
-
+  //pullFromGit('/home/pi/build/site/peiper.se');
   res.sendStatus(200);
   res.end();
+
+  createSiteBuild(req.body.head_commit.id, req.body.head_commit.message);
 });
 
 async function createSiteBuild(hash, message) {
   console.log('creating build: ' + hash);
-  let data = ravenHelper.createSiteBuild(hash, message)
+  let data = await ravenHelper.createSiteBuild(hash, message);
   //Build
-  exec('(cd /home/pi/build/site/peiper.se && yarn run build)', function (err, stdout, stderr) { execCallback(err, stdout, stderr, data) });
+  //exec('(cd /home/pi/build/site/peiper.se && yarn run build)', function (err, stdout, stderr) { execCallback(err, stdout, stderr, data) });
 
   //copy files to build version folder
   exec('(cd /home/pi/build/site/ && mkdir ' + data.version + ')', execCallback);
@@ -50,10 +50,10 @@ app.post('/api/build', function (req, res) {
   }
 
   pullFromGit('/home/pi/peiper-api-publish');
-  createApiBuild(req.body.head_commit.id, req.body.head_commit.message);
-
   res.sendStatus(200);
   res.end();
+
+  createApiBuild(req.body.head_commit.id, req.body.head_commit.message);
 });
 
 async function createApiBuild(hash, message) {
