@@ -39,7 +39,7 @@ async function createSiteBuild(hash, message) {
   exec('cp -r /home/pi/build/site/peiper.se/. /home/pi/build/site/' + data.version, execCallback);
 
   //Update build data
-  await updateData(data.id, 'DONE');
+  await ravenHelper.updateData(data.id, 'DONE');
   console.log('build done: ' + hash);
 };
 
