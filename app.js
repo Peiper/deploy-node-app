@@ -19,6 +19,7 @@ app.post('/site/build', function (req, res) {
   if (req.body == undefined || req.body.head_commit == undefined) {
     res.sendStatus(400);
     res.end();
+    return;
   }
 
   pullFromGit('/home/pi/build/site/peiper.se');
@@ -47,6 +48,7 @@ app.post('/api/build', function (req, res) {
   if (req.body == undefined || req.body.head_commit == undefined) {
     res.sendStatus(400);
     res.end();
+    return;
   }
 
   pullFromGit('/home/pi/build/api/peiper-api-publish');
