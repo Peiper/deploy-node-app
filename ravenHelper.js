@@ -1,15 +1,16 @@
 var DocumentStore = require('ravendb').default;
 
-const store = DocumentStore.create('localhost:8080', 'build-deploy');
+const store = DocumentStore.create('http://192.168.0.15:8080', 'build-release');
 store.initialize();
 
 module.exports = {
     createSiteBuild: async function (hash, message) {
         const session = store.openSession();
 
-        let version = await store.load('BuildVersions/1');
-        let newSiteVersion = version.site + 1;
-        version.site = newSiteVersion;
+        let version = await session.load('Versioning/1');
+        let newSiteVersion = version.SiteBuildVersion + 1;
+        version.SiteBuildVersion = newSiteVersion;
+
         let data = {
             version: newSiteVersion,
             status: 'STARTED',
@@ -25,11 +26,12 @@ module.exports = {
     createApiBuild: async function (hash, message) {
         const session = store.openSession();
 
-        let version = await store.load('BuildVersions/1');
-        let newApiVersion = version.api + 1;
-        version.api = newApiVersion;
+        let version = await session.load('Versioning/1');
+        let newApiVersion = version.ApiBuildVersion + 1;
+        version.ApiBuildVersion = newApiVersion;
+
         let data = {
-            version: newSiteVersion,
+            version: newApiVersion,
             status: 'STARTED',
             hash: hash,
             message: message,
