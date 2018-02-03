@@ -29,8 +29,8 @@ module.exports = {
         const session = store.openSession();
 
         let version = await session.load('Versioning/ApiBuild');
-        let newApiVersion = version.ApiBuildVersion + 1;
-        version.ApiBuildVersion = newApiVersion;
+        version.Build = version.Build + 1;
+        let newApiVersion = version.Major + '.' + version.Minor + '.' + version.Build;
 
         let data = {
             version: newApiVersion,

@@ -21,7 +21,7 @@ app.post('/site/build', function (req, res) {
     res.end();
   }
 
-  //pullFromGit('/home/pi/build/site/peiper.se');
+  pullFromGit('/home/pi/build/site/peiper.se');
   res.sendStatus(200);
   res.end();
 
@@ -32,7 +32,7 @@ async function createSiteBuild(hash, message) {
   console.log('creating build: ' + hash);
   let data = await ravenHelper.createSiteBuild(hash, message);
   //Build
-  //exec('(cd /home/pi/build/site/peiper.se && yarn run build)', function (err, stdout, stderr) { execCallback(err, stdout, stderr, data) });
+  exec('(cd /home/pi/build/site/peiper.se && yarn run build)', function (err, stdout, stderr) { execCallback(err, stdout, stderr, data) });
 
   //copy files to build version folder
   exec('(cd /home/pi/build/site/ && mkdir ' + data.version + ')', execCallback);
@@ -49,7 +49,7 @@ app.post('/api/build', function (req, res) {
     res.end();
   }
 
-  pullFromGit('/home/pi/peiper-api-publish');
+  pullFromGit('/home/pi/build/api/peiper-api-publish');
   res.sendStatus(200);
   res.end();
 
@@ -59,13 +59,14 @@ app.post('/api/build', function (req, res) {
 async function createApiBuild(hash, message) {
   console.log('creating build');
 
-  ravenHelper.createApiBuild(hash, message);
+  let data = await ravenHelper.createApiBuild(hash, message);
 
   //Build
   //TODO wait for dotnet publish to work
-  //exec('(cd /home/pi/deploy-site/peiper.se && yarn run build)', function (err, stdout, stderr) { execCallback(err, stdout, stderr, data) });
 
-  //TODO mkdir copy files
+  //copy files to build version folder
+  exec('(cd /home/pi/build/api/ && mkdir ' + data.version + ')', execCallback);
+  exec('cp -r /home/pi/build/api/peiper-api-publish/. /home/pi/build/api/' + data.version, execCallback);
 
   //Update build data
   await updateData(data.id, 'DONE');
@@ -121,12 +122,12 @@ function execCallback(err, stdout, stderr, data) {
 }
 
 function pullFromGit(repoPath) {
-  console.log('pulling code from GitHub...');
+  console.log('pulling code from git');
   // reset any changes that have been made locally
   exec('sudo git -C ' + repoPath + ' reset --hard', execCallback);
   // and ditch any files that have been added locally too
   exec('sudo git -C ' + repoPath + ' clean -df', execCallback);
   // now pull down the latest
   exec('sudo git -C ' + repoPath + ' pull -f', execCallback);
-  console.log('pulling code from done');
+  console.log('pulling code from git done');
 }
