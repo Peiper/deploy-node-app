@@ -17,6 +17,7 @@ app.get('/', function (req, res) {
 
 app.post('/site/build', function (req, res) {
   if (req.body == undefined || req.body.head_commit == undefined) {
+    console.log('no commit data from git');
     res.sendStatus(400);
     res.end();
     return;
@@ -46,6 +47,7 @@ async function createSiteBuild(hash, message) {
 
 app.post('/api/build', function (req, res) {
   if (req.body == undefined || req.body.head_commit == undefined) {
+    console.log('no commit data from git');
     res.sendStatus(400);
     res.end();
     return;
