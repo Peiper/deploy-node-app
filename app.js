@@ -73,7 +73,7 @@ async function createApiBuild(hash, message) {
   exec('cp -r /home/pi/build/api/peiper-api-publish/. /home/pi/build/api/' + data.version, execCallback);
 
   //Update build data
-  await updateData(data.id, 'DONE');
+  await ravenHelper.updateData(data.id, 'DONE');
   console.log('build done');
 }
 
