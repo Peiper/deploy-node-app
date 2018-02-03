@@ -7,9 +7,9 @@ module.exports = {
     createSiteBuild: async function (hash, message) {
         const session = store.openSession();
 
-        let version = await session.load('Versioning/1');
-        let newSiteVersion = version.SiteBuildVersion + 1;
-        version.SiteBuildVersion = newSiteVersion;
+        let version = await session.load('Versioning/SiteBuild');
+        version.build = version.build + 1;
+        let newSiteVersion = version.major + '.' + version.minor + '.' + version.build;
 
         let data = {
             version: newSiteVersion,
@@ -28,7 +28,7 @@ module.exports = {
     createApiBuild: async function (hash, message) {
         const session = store.openSession();
 
-        let version = await session.load('Versioning/1');
+        let version = await session.load('Versioning/ApiBuild');
         let newApiVersion = version.ApiBuildVersion + 1;
         version.ApiBuildVersion = newApiVersion;
 
