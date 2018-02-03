@@ -36,7 +36,7 @@ async function createSiteBuild(hash, message) {
 
   //copy files to build version folder
   exec('(cd /home/pi/build/site/ && mkdir ' + data.version + ')', execCallback);
-  exec('cp /home/pi/build/site/peiper.se/. /home/pi/build/site/' + data.version);
+  exec('cp -r /home/pi/build/site/peiper.se/. /home/pi/build/site/' + data.version, execCallback);
 
   //Update build data
   await updateData(data.id, 'DONE');
