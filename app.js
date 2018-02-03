@@ -123,10 +123,10 @@ function execCallback(err, stdout, stderr, data) {
 function pullFromGit(repoPath) {
   console.log('pulling code from GitHub...');
   // reset any changes that have been made locally
-  exec('sudo git -C ' + repoPath + 'reset --hard', execCallback);
+  exec('sudo git -C ' + repoPath + ' reset --hard', execCallback);
   // and ditch any files that have been added locally too
   exec('sudo git -C ' + repoPath + ' clean -df', execCallback);
   // now pull down the latest
-  exec('sudo git -C ' + repoPath + 'pull -f', execCallback);
+  exec('sudo git -C ' + repoPath + ' pull -f', execCallback);
   console.log('pulling code from done');
 }
