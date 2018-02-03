@@ -8,8 +8,8 @@ module.exports = {
         const session = store.openSession();
 
         let version = await session.load('Versioning/SiteBuild');
-        version.build = version.build + 1;
-        let newSiteVersion = version.major + '.' + version.minor + '.' + version.build;
+        version.Build = version.Build + 1;
+        let newSiteVersion = version.Major + '.' + version.Minor + '.' + version.Build;
 
         let data = {
             version: newSiteVersion,
