@@ -69,7 +69,7 @@ async function buildSite(data) {
 
   //Build
   try {
-    exec('(cd /home/pi/build/site/peiper.se && yarn run build)', execCallback);
+    exec('(cd /home/pi/build/site/peiper.se && sudo yarn run build)', execCallback);
   } catch (err) {
     console.log('site build failed');
     await ravenHelper.updateDataStatus(data.id, 'FAILED');
