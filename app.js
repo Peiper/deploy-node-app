@@ -165,6 +165,8 @@ function pullFromGit(repoPath, hash) {
   exec('sudo git -C ' + repoPath + ' reset --hard', execCallback);
   // and ditch any files that have been added locally too
   exec('sudo git -C ' + repoPath + ' clean -df', execCallback);
+  //fetch changes to get current working tree
+  exec('sudo git -C ' + repoPath + ' fetch', execCallback);
   // now checkout wanted revision
   exec('sudo git -C ' + repoPath + ' checkout ' + hash, execCallback);
   console.log('pulling code from git done');
