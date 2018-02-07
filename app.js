@@ -152,7 +152,8 @@ function execCallback(err, stdout, stderr, data) {
     console.log(stdout);
   }
   if (stderr) {
-    if (data) {
+    console.log(data);
+    if (data != undefined) {
       ravenHelper.updateDataStatus(data.id, 'FAILED');
     }
     console.log(stderr);
