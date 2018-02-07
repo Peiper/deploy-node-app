@@ -113,13 +113,16 @@ async function buildApi(data) {
 }
 
 //Deploy peiper.se
-app.get('/site/deploy', function (req, res) {
-
-  //TODO mkdir release version
+app.post('/site/deploy', function (req, res) {
+  if (req.body == undefined || req.body.version == undefined) {
+    console.log('no version specified');
+    res.sendStatus(400);
+    res.end();
+    return;
+  }
 
   console.log('copying dist to www');
-  //TODO check path
-  exec('sudo cp -r /home/pi/site-deploy/peiper.se/dist/. /www/peiper.se');
+  exec('sudo cp -r /home/pi/build/site/' + req.body.version + '/. /www/peiper.se');
   console.log('deploy done');
 
   res.sendStatus(200);
@@ -127,16 +130,22 @@ app.get('/site/deploy', function (req, res) {
 });
 
 //Deploy peiper api
-app.get('/api/deploy', function (req, res) {
-
-  //TODO mkdir release version
+app.post('/api/deploy', function (req, res) {
+  if (req.body == undefined || req.body.version == undefined) {
+    console.log('no version specified');
+    res.sendStatus(400);
+    res.end();
+    return;
+  }
 
   console.log('copying publish to /usr/local/peiper-api');
-  exec('sudo cp -r /home/pi/peiper-api-publish/. /usr/local/peiper-api');
+  // stop service
+  exec('sudo systemctl stop kestrel-api.service', execCallback);
+  exec('sudo cp -r /home/pi/build/api/' + req.body.version + '/. /usr/local/peiper-api');
   // make api executeable
   exec('sudo chmod 755 /usr/local/peiper-api/api');
-  // restart service
-  exec('sudo systemctl restart kestrel-api.service', execCallback);
+  // start service
+  exec('sudo systemctl start kestrel-api.service', execCallback);
 
   console.log('deploy done');
 
