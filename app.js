@@ -10,30 +10,24 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 cron.schedule('0,30 * * * * *', async function () {
-  console.log('checking for queued site builds');
   if (await ravenHelper.isBuildInProccess('SiteBuilds')) {
-    console.log('site build is in progess');
     return;
   }
-  console.log('no site build in progress');
+
   let buildInQueue = await ravenHelper.getBuildInQueue('SiteBuilds');
   if (buildInQueue != undefined) {
-    console.log('site builds in queue');
     await ravenHelper.updateDataStatus(buildInQueue.id, 'STARTED');
     await buildSite(buildInQueue);
   }
 });
 
 cron.schedule('15,45 * * * * *', async function () {
-  console.log('checking for queued api builds');
   if (await ravenHelper.isBuildInProccess('ApiBuilds')) {
-    console.log('api build is in progess');
     return;
   }
-  console.log('no api build in progress');
+
   let buildInQueue = await ravenHelper.getBuildInQueue('ApiBuilds');
   if (buildInQueue != undefined) {
-    console.log('api builds in queue');
     await ravenHelper.updateDataStatus(buildInQueue.id, 'STARTED');
     await buildApi(buildInQueue);
   }
