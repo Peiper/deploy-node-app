@@ -7,6 +7,7 @@
     "body-parser": "^1.15.1",
     "compression": "^1.6.2",
     "express": "^4.13.4",
+    "node-cron": "^1.2.1",
     "ravendb": "^4.0.0-rc3"
   },
   "devDependencies": {},

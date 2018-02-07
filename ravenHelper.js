@@ -13,7 +13,7 @@ module.exports = {
 
         let data = {
             version: newSiteVersion,
-            status: 'STARTED',
+            status: 'QUEUED',
             hash: hash,
             message: message,
             created: new Date(),
@@ -34,7 +34,7 @@ module.exports = {
 
         let data = {
             version: newApiVersion,
-            status: 'STARTED',
+            status: 'QUEUED',
             hash: hash,
             message: message,
             created: new Date(),
@@ -46,7 +46,7 @@ module.exports = {
 
         return data;
     },
-    updateData: async function (id, status) {
+    updateDataStatus: async function (id, status) {
         const session = store.openSession();
         data = await session.load(id);
         data.status = status;
@@ -54,5 +54,23 @@ module.exports = {
 
         await session.store(data);
         await session.saveChanges();
+    },
+    isBuildInProccess: async function(collection){
+        const session = store.openSession();
+
+        var query = session.query({collection: collection});
+        query.whereEquals('status', 'STARTED');
+        let docs = await query.all();
+
+        return docs.length > 0;
+    },
+    getBuildInQueue: async function(collection){
+        const session = store.openSession();
+
+        var query = session.query({collection: collection});
+        query.whereEquals('status', 'QUEUED').orderBy('created');
+        let docs = await query.all();
+
+        return docs[0];
     }
 };
