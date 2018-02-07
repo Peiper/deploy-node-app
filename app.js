@@ -75,7 +75,7 @@ async function buildSite(data) {
   exec('cp -r /home/pi/build/site/peiper.se/dist/. /home/pi/build/site/' + data.version, execCallback);
 
   //Update build data
-  await ravenHelper.updateDataStatus(data.id, 'DONE');
+  await ravenHelper.updateDataStatus(data.id, 'SUCCESS');
   console.log('build done: ' + data.hash);
 }
 
@@ -108,7 +108,7 @@ async function buildApi(data) {
   exec('cp -r /home/pi/build/api/peiper-api-publish/. /home/pi/build/api/' + data.version, execCallback);
 
   //Update build data
-  await ravenHelper.updateDataStatus(data.id, 'DONE');
+  await ravenHelper.updateDataStatus(data.id, 'SUCCESS');
   console.log('api build done: ' + data.hash);
 }
 
