@@ -66,8 +66,15 @@ async function queueSiteBuild(hash, message) {
 async function buildSite(data) {
   console.log('starting build: ' + data.hash);
   pullFromGit('/home/pi/build/site/peiper.se', data.hash);
+
   //Build
-  exec('(cd /home/pi/build/site/peiper.se && yarn run build)', function (err, stdout, stderr) { execCallback(err, stdout, stderr, data) });
+  try {
+    exec('(cd /home/pi/build/site/peiper.se && yarn run build)', execCallback);
+  } catch (err) {
+    console.log('site build failed');
+    await ravenHelper.updateDataStatus(data.id, 'FAILED');
+    return;
+  }
 
   //copy files to build version folder
   exec('(cd /home/pi/build/site/ && mkdir ' + data.version + ')', execCallback);
@@ -147,15 +154,11 @@ app.listen(3000, function () {
   console.log('listening on port 3000')
 });
 
-function execCallback(err, stdout, stderr, data) {
+function execCallback(err, stdout, stderr) {
   if (stdout) {
     console.log(stdout);
   }
   if (stderr) {
-    console.log(data);
-    if (data != undefined) {
-      ravenHelper.updateDataStatus(data.id, 'FAILED');
-    }
     console.log(stderr);
   }
 }
